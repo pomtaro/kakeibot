@@ -134,8 +134,6 @@ def webhook():
                         buttons = ["労働について", "離婚・男女問題について", "借金について"]
                         send_quick_reply(sender_id, text, buttons)
 
-                    else:
-
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
