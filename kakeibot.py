@@ -149,7 +149,10 @@ def webhook():
 
                     sender_id = messaging_event["sender"]["id"]
                     text = 'これから楽しく家計簿をつけましょう！'
-
+                    send_message(sender_id, text)
+                    text = '例えばこんな感じで記録してね！'
+                    send_message(sender_id, text)
+                    text = 'お菓子320円'
                     send_message(sender_id, text)
 
     return "ok", 200
