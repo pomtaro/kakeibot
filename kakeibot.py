@@ -98,7 +98,7 @@ def webhook():
                             total.append(total_child)
 
                         for index, genre in enumerate(genre_list):
-                            total_price = str(sum(total[index]))
+                            total_price = sum(total[index])
                             text = '{} : {}'.format(genre, total_price)
                             send_message(sender_id, text)
 
