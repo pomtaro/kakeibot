@@ -15,6 +15,10 @@ app = Flask(__name__)
 ACCESS_TOKEN = 'EAAi6HZC8lnUIBAMZCSVd8sDkRe6YSi58nlsoAHbAgGyzsbKssZBShgj3TCRS7L5Om62x0GRVLwcN9jVggpK8pqRzBFiiRIpmZBN2oMnH6FaNGVBy2JLsthUS83gMgNObpVwZBkOaUwJmNmJYbNIh2USZAClN68f3G2J6jacz0PfQZDZD'
 VERIFY_TOKEN = 'Verify_Token_Dev'
 
+genres = []
+prices = []
+dates = []
+
 def send_get_started():
     params = {
         "access_token": ACCESS_TOKEN  # os.environ["PAGE_ACCESS_TOKEN"]
@@ -73,66 +77,33 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
 
-                    if message_text == '労働について':
-                        text = '具体的に以下からお選びください'
-                        buttons = ['給与について', '労働時間や休暇について', '人間関係のトラブル', '人事異動と就職・退職', '労働契約と社会保険・労災', 'トラブルの相続先と解決方法', '上記に当てはまるものがない']
+                    if '、' in message_text:
+                        split_message_texts = message_text.split('、')
+                        genres.append(split_message_texts[0])
+                        prices.append(split_message_texts[1])
+                        dates.append(datetime.now())
+
+                        text = '今月の合計はこちら'
+                        buttons = ['今月の合計はこちら']
                         send_quick_reply(sender_id, text, buttons)
 
-                    elif message_text == '給与について' or message_text == '労働時間や休暇について' or message_text == '人間関係のトラブル' or message_text == '人事異動と就職・退職' or message_text == '労働契約と社会保険・労災' \
-                            or message_text == 'トラブルの相続先と解決方法' or message_text == '上記に当てはまるものがない':
-                        text = 'ぜひ一度、無料相談をご利用下さい！'
-                        title = '無料相談のご案内'
-                        subtitle = '無料相談のお申し込みはこちらからどうぞ'
-                        url_str = 'https://www.bengo4.com/'
-                        image_url = 'https://www.bengo4.com/img/common/logo_fb_210_210.gif'
+                    elif message_text == '今月の合計はこちら':
+                        genre_list = list(set(genres))
+                        total = []
+                        for genre in genre_list:
+                            total_child = []
+                            for index, genre_child in enumerate(genres):
+                                if genre_child == genre:
+                                    total_child.append(prices[index])
+                            total.append(total_child)
+
+                        for index, genre in enumerate(genre_list):
+                            text = '{} : {}'.format(genre, str(sum(total[index])))
+                            send_message(sender_id, text)
+
+                        text = 'また追加するときは、「ジャンル、値段」みたいに入れてね！'
                         send_message(sender_id, text)
-                        send_url_image(sender_id, title, subtitle, url_str, image_url)
 
-                        text = '最初から始める場合は、以下のボタンを押してください。'
-                        buttons = ['最初から始める']
-                        send_quick_reply(sender_id, text, buttons)
-
-                    elif message_text == '離婚・男女問題について':
-                        text = '具体的に以下からお選びください'
-                        buttons = ['お金のトラブル', '離婚と子供', '男女トラブル', '上記に当てはまるものがない']
-                        send_quick_reply(sender_id, text, buttons)
-
-                    elif message_text == 'お金のトラブル' or message_text == '離婚と子供' or message_text == '男女トラブル' or message_text == '上記に当てはまるものがない':
-                        text = 'ぜひ一度、無料相談をご利用下さい！'
-                        title = '無料相談のご案内'
-                        subtitle = '無料相談のお申し込みはこちらからどうぞ'
-                        url_str = 'https://www.bengo4.com/'
-                        image_url = 'https://www.bengo4.com/img/common/logo_fb_210_210.gif'
-                        send_message(sender_id, text)
-                        send_url_image(sender_id, title, subtitle, url_str, image_url)
-
-                        text = '最初から始める場合は、以下のボタンを押してください。'
-                        buttons = ['最初から始める']
-                        send_quick_reply(sender_id, text, buttons)
-
-                    elif message_text == '借金について':
-                        text = '具体的な内容を、以下からお選びください'
-                        buttons = ['借金の減額や見直し', '取り立てと差し押さえ', '身近な人の借金', '過去の借金', '借金の基礎知識', '上記に当てはまるものがない']
-                        send_quick_reply(sender_id, text, buttons)
-
-                    elif message_text == '借金の減額や見直し' or message_text == '取り立てと差し押さえ' or message_text == '身近な人の借金' or message_text == '過去の借金' or message_text == '借金の基礎知識' or message_text == '上記に当てはまるものがない':
-                        text = 'ぜひ一度、無料相談をご利用下さい！'
-                        title = '無料相談のご案内'
-                        subtitle = '無料相談のお申し込みはこちらからどうぞ'
-                        url_str = 'https://www.bengo4.com/'
-                        image_url = 'https://www.bengo4.com/img/common/logo_fb_210_210.gif'
-                        send_message(sender_id, text)
-                        send_url_image(sender_id, title, subtitle, url_str, image_url)
-
-                        text = '最初から始める場合は、以下のボタンを押してください。'
-                        buttons = ['最初から始める']
-                        send_quick_reply(sender_id, text, buttons)
-
-                    elif message_text == '最初から始める':
-                        sender_id = messaging_event["sender"]["id"]
-                        text = "お悩みを教えてください。"
-                        buttons = ["労働について", "離婚・男女問題について", "借金について"]
-                        send_quick_reply(sender_id, text, buttons)
 
 
                 if messaging_event.get("delivery"):  # delivery confirmation
@@ -152,8 +123,11 @@ def webhook():
                     send_message(sender_id, text)
                     text = '例えばこんな感じで記録してね！'
                     send_message(sender_id, text)
-                    text = 'お菓子320円'
+                    text = 'お菓子、320'
                     send_message(sender_id, text)
+                    text = '「ジャンル、値段」みたいに句読点が重要だよ！'
+                    send_message(sender_id, text)
+
 
     return "ok", 200
 
