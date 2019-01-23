@@ -80,7 +80,7 @@ def webhook():
                     if '、' in message_text:
                         split_message_texts = message_text.split('、')
                         genres.append(split_message_texts[0])
-                        prices.append(split_message_texts[1])
+                        prices.append(int(split_message_texts[1]))
                         dates.append(datetime.now())
 
                         text = '今月の合計はこちら'
