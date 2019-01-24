@@ -106,9 +106,12 @@ def webhook():
                         send_message(sender_id, text)
 
                     elif message_text == 'リセット':
-                        genres = []
-                        prices = []
-                        dates = []
+                        genres.clear()
+                        prices.clear()
+                        dates.clear()
+
+                        text = 'すべてリセットしたよ！'
+                        send_message(sender_id, text)
 
 
 
