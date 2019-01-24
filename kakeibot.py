@@ -105,6 +105,11 @@ def webhook():
                         text = 'また追加するときは、「ジャンル、値段」みたいに入れてね！'
                         send_message(sender_id, text)
 
+                    elif message_text == 'リセット':
+                        genres = []
+                        prices = []
+                        dates = []
+
 
 
                 if messaging_event.get("delivery"):  # delivery confirmation
